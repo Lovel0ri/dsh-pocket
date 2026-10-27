@@ -5,6 +5,10 @@
 
 > 一句话：本机 ACP + 手机 Web UI，个人可信网络自用。
 
+![dsh-pocket 架构示意图](docs/architecture.svg)
+
+*手机浏览器 → 本机 FastAPI/WS → ACP 子进程 → DeepSeek Harness；会话历史存本机 SQLite。*
+
 ## 能做什么
 
 - **手机聊天**：流式回复（块级推送，不是逐字），代码块 / 表格正常渲染，思考过程可折叠。
