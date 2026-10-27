@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f7f8fa" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="dark light">
+<meta name="format-detection" content="telephone=no">
+<title>dsh pocket</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230d1420'/%3E%3Cpath d='M20 16h11c9 0 15 6 15 16s-6 16-15 16H20V16zm8 7v18h3c4.8 0 7.5-3.3 7.5-9S35.8 23 31 23h-3z' fill='%2374a9fe'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="./css/app.css">
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" class="sprite" aria-hidden="true">
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 10-2.4 5.7"/><path d="M20 4.5V11h-6.4"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M21.5 2.5L10.8 13.2"/><path d="M21.5 2.5L15 21l-4.2-7.8L3 9l18.5-6.5z"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2.2" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3.5 6.5A1.5 1.5 0 015 5h4.2l2 2.4H19a1.5 1.5 0 011.5 1.5v8.6A1.5 1.5 0 0119 19H5a1.5 1.5 0 01-1.5-1.5v-11z"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5.5h16v10H9l-5 3.5v-13.5z"/></symbol>
+  <symbol id="i-terminal" viewBox="0 0 24 24"><rect x="2.6" y="4.2" width="18.8" height="15.6" rx="3"/><path d="M7 9.2l3.1 3L7 15.2M13.2 15.4H17"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7a2 2 0 002 2h3"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></symbol>
+  <symbol id="i-warning" viewBox="0 0 24 24"><path d="M12 3.6L21 19.4H3L12 3.6z"/><path d="M12 9.4v4.2M12 16.6h.01"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5.2c0 4.4-3 7.6-7 9.3-4-1.7-7-4.9-7-9.3V6l7-3z"/><path d="M9.2 12.2l2 2 3.7-3.9"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.2M12 7.8h.01"/></symbol>
+</svg>
+
+<div id="app">
+  <!-- Boot / fatal connection error -->
+  <section id="screenBoot" class="screen boot" hidden>
+    <div class="boot-inner">
+      <div class="brand-mark" aria-hidden="true">dsh</div>
+      <h1 class="brand-title">dsh pocket</h1>
+      <div class="boot-status">
+        <span id="bootSpinner" class="spinner" aria-hidden="true"></span>
+        <span id="bootText">正在连接 dsh-pocket…</span>
+      </div>
+      <div id="bootError" class="error-card" hidden>
+        <svg class="icon" aria-hidden="true"><use href="#i-warning"></use></svg>
+        <p id="bootErrorText"></p>
+        <button id="btnBootRetry" class="btn primary" type="button">重试</button>
+      </div>
+    </div>
+    <p class="boot-foot">个人版 · 仅限可信局域网 · 无需登录</p>
+  </section>
+
+  <!-- Home: phone sessions -->
+  <section id="screenHome" class="screen home" hidden>
+    <header class="appbar">
+      <button id="btnDrawer" class="ws-trigger" type="button" aria-haspopup="dialog" aria-controls="drawer">
+        <span class="ws-mark" aria-hidden="true"></span>
+        <span class="ws-trigger-text">
+          <span id="wsName" class="ws-name">选择工作区</span>
+          <span id="wsPath" class="ws-path"></span>
+        </span>
+        <svg class="icon sm" aria-hidden="true"><use href="#i-chevron-down"></use></svg>
+      </button>
+      <div class="appbar-actions">
+        <span id="connDot" class="conn-dot" data-status="connecting" title="连接状态"></span>
+        <button id="btnRefresh" class="icon-btn" type="button" aria-label="刷新"><svg class="icon" aria-hidden="true"><use href="#i-refresh"></use></svg></button>
+        <button id="btnNew" class="icon-btn accent" type="button" aria-label="新建会话"><svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg></button>
+      </div>
+    </header>
+
+    <main class="home-main">
+      <div class="home-heading">
+        <h1>会话</h1>
+        <span id="sessionCount" class="muted"></span>
+      </div>
+      <div id="listStatus" class="inline-status" hidden></div>
+      <div id="sessionList" class="session-list"></div>
+      <div id="listEmpty" class="empty" hidden>
+        <div class="empty-icon"><svg class="icon" aria-hidden="true"><use href="#i-chat"></use></svg></div>
+        <p class="empty-title">还没有会话</p>
+        <p class="empty-hint">点右上角 ＋ 新建一个。手机上的会话保存在本机 pocket.db，不读取桌面历史。</p>
+        <button id="btnEmptyNew" class="btn primary" type="button">新建会话</button>
+      </div>
+      <button id="btnLoadMore" class="load-more" type="button" hidden>加载更多</button>
+    </main>
+    <footer class="home-foot">
+      <span id="modeLabel">dsh-pocket</span>
+      <span class="dot-sep">·</span>
+      <span>无鉴权，仅限可信局域网</span>
+    </footer>
+  </section>
+
+  <!-- Chat -->
+  <section id="screenChat" class="screen chat" hidden>
+    <header class="appbar chatbar">
+      <button id="btnBack" class="icon-btn" type="button" aria-label="返回会话列表"><svg class="icon" aria-hidden="true"><use href="#i-back"></use></svg></button>
+      <div class="chat-title-wrap">
+        <div id="chatTitle" class="chat-title">会话</div>
+        <div class="chat-sub">
+          <span id="stateChip" class="state-chip" data-state="idle">就绪</span>
+          <span id="usageText" class="usage-text"></span>
+        </div>
+      </div>
+      <div class="appbar-actions">
+        <span id="connDotChat" class="conn-dot" data-status="connecting" title="连接状态"></span>
+      </div>
+    </header>
+
+    <div id="chatBanner" class="banner" hidden>
+      <svg class="icon sm" aria-hidden="true"><use href="#i-warning"></use></svg>
+      <span id="bannerText"></span>
+      <button id="bannerAction" class="banner-action" type="button" hidden></button>
+    </div>
+
+    <div id="messageScroll" class="message-scroll">
+      <div class="older-row">
+        <button id="btnOlder" class="older-btn" type="button" hidden>加载更早消息</button>
+      </div>
+      <div id="messageList" class="message-list"></div>
+      <div id="chatLoading" class="chat-loading"><span class="spinner" aria-hidden="true"></span><span>加载历史…</span></div>
+      <div id="chatEmpty" class="empty chat-empty" hidden>
+        <div class="empty-icon"><svg class="icon" aria-hidden="true"><use href="#i-terminal"></use></svg></div>
+        <p class="empty-title">开始对话</p>
+        <p class="empty-hint">在下方输入消息，DSH 会在当前工作区执行工具。</p>
+      </div>
+    </div>
+
+    <button id="btnNewBelow" class="new-below" type="button" hidden>有新内容 ↓</button>
+
+    <div id="composer" class="composer" data-mode="idle">
+      <div id="composerHint" class="composer-hint">Enter 发送 · Shift+Enter 换行</div>
+      <div class="composer-row">
+        <textarea id="composerInput" rows="1" placeholder="给 DSH 发消息…" enterkeyhint="send" aria-label="消息输入框"></textarea>
+        <button id="btnSend" class="send-btn" type="button" aria-label="发送消息"><svg class="icon" aria-hidden="true"><use href="#i-send"></use></svg></button>
+        <button id="btnStop" class="stop-btn" type="button" aria-label="停止生成" hidden><svg class="icon" aria-hidden="true"><use href="#i-stop"></use></svg></button>
+        <button id="btnResume" class="resume-btn" type="button" hidden>继续</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Drawer -->
+<div id="drawerBackdrop" class="drawer-backdrop" hidden>
+  <aside id="drawer" class="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+    <div class="drawer-head">
+      <div class="drawer-brand">
+        <span class="brand-mark sm" aria-hidden="true">dsh</span>
+        <h2 id="drawerTitle">工作区与会话</h2>
+      </div>
+      <button id="btnDrawerClose" class="icon-btn" type="button" aria-label="关闭抽屉"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button>
+    </div>
+
+    <div class="drawer-scroll">
+      <section class="drawer-section">
+        <div class="section-head">
+          <h3>工作区</h3>
+          <button id="btnBrowseToggle" class="text-btn" type="button">浏览目录</button>
+        </div>
+        <div id="workspaceList" class="workspace-list"></div>
+        <div id="browsePanel" class="browse-panel" hidden>
+          <div class="browse-bar">
+            <button id="btnBrowseUp" class="browse-up" type="button" aria-label="上一级"><svg class="icon sm" aria-hidden="true"><use href="#i-back"></use></svg></button>
+            <span id="browsePath" class="browse-path">—</span>
+          </div>
+          <div id="browseEntries" class="browse-entries"></div>
+          <p id="browseError" class="browse-error" hidden></p>
+          <button id="btnBrowseUse" class="btn ghost block" type="button">在此目录新建会话</button>
+        </div>
+      </section>
+
+      <section class="drawer-section">
+        <div class="section-head">
+          <h3>手机会话</h3>
+          <span id="drawerSessionCount" class="muted"></span>
+        </div>
+        <div id="drawerSessions" class="drawer-sessions"></div>
+      </section>
+    </div>
+
+    <div class="drawer-foot">
+      <button id="btnDrawerNew" class="btn primary block" type="button">
+        <svg class="icon sm" aria-hidden="true"><use href="#i-plus"></use></svg>
+        新建会话
+      </button>
+    </div>
+  </aside>
+</div>
+
+<!-- Permission modal -->
+<div id="permissionOverlay" class="permission-overlay" hidden>
+  <div class="permission-card" role="alertdialog" aria-modal="true" aria-labelledby="permTool" aria-describedby="permNote">
+    <div class="perm-head">
+      <span class="perm-badge"><svg class="icon sm" aria-hidden="true"><use href="#i-shield"></use></svg>工具权限请求</span>
+      <span id="permQueue" class="perm-queue" hidden></span>
+    </div>
+    <h2 id="permTool" class="perm-tool">bash</h2>
+    <p id="permNote" class="perm-note">DSH 想执行下面的工具调用。<strong>默认拒绝</strong>，允许只对这一次生效。</p>
+    <div class="perm-label">参数预览</div>
+    <pre id="permArgs" class="perm-args"></pre>
+    <div class="perm-time">
+      <span id="permTimeText" class="perm-time-text">剩余 120 秒</span>
+    </div>
+    <div class="perm-actions">
+      <button id="btnPermAllow" class="btn ghost" type="button">允许一次</button>
+      <button id="btnPermReject" class="btn danger" type="button">拒绝</button>
+    </div>
+    <p class="perm-foot">个人版 · 仅允许或拒绝本次工具调用</p>
+  </div>
+</div>
+
+<div id="toastHost" class="toast-host" aria-live="polite"></div>
+<noscript><div class="noscript">dsh-pocket 需要启用 JavaScript。</div></noscript>
+
+<script src="./js/util.js"></script>
+<script src="./js/api.js"></script>
+<script src="./js/ws.js"></script>
+<script src="./js/ui.js"></script>
+<script src="./js/app.js"></script>
+</body>
+</html>

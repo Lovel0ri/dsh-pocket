@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dsh-pocket"
+version = "0.1.0"
+description = "Mobile web client backend for a local DeepSeek Harness (ACP), REST + WebSocket"
+readme = "docs/api.md"
+requires-python = ">=3.11"
+license = { text = "Proprietary" }
+authors = [{ name = "dsh-pocket team" }]
+dependencies = [
+  "fastapi>=0.110",
+  "uvicorn[standard]>=0.27",
+  # Optional at runtime: used only for the QR code in the startup banner.
+  "qrcode>=7.4",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8",
+  "httpx>=0.27",
+  "websockets>=12",
+]
+
+[project.scripts]
+dsh-pocket = "dsh_pocket.__main__:main"
+
+[tool.setuptools]
+packages = ["dsh_pocket"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = [
+  "error::DeprecationWarning:dsh_pocket.*",
+]

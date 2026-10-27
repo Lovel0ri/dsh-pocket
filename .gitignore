@@ -1,0 +1,25 @@
+# Local isolated DSH home created by T1 (contains a credentials copy — never commit)
+.dev-home/
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+.venv/
+
+# Runtime state (tokens etc.)
+.dsh-pocket/
+*.log
+
+# Generated spike artifacts (regenerable)
+spikes/_transcripts/
+spikes/_logs/
+spikes/_out/
+spikes/_asar_src/
+spikes/__pycache__/
+
+# Local dev-only static overrides
+static/.dev/
